@@ -1,1 +1,720 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>教师八部金刚功运动打卡</title>
+  <style>
+    :root {
+      --primary: #2f7d57;
+      --primary-dark: #246244;
+      --bg: #f4f8f5;
+      --card: #ffffff;
+      --text: #1f2933;
+      --muted: #6b7280;
+      --success: #16a34a;
+      --border: #d8e3dc;
+      --warning: #f59e0b;
+    }
 
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei",
+        "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(180deg, #eef7f0 0%, #f8faf8 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+      padding: 28px 16px;
+      background: var(--card);
+      border-radius: 20px;
+      box-shadow: 0 10px 24px rgba(31, 41, 51, 0.08);
+      border: 1px solid var(--border);
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      color: var(--primary-dark);
+      letter-spacing: 0.04em;
+    }
+
+    header p {
+      margin: 6px 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .notice {
+      margin-top: 16px;
+      padding: 12px 14px;
+      background: #fff7ed;
+      color: #92400e;
+      border: 1px solid #fed7aa;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      text-align: left;
+    }
+
+    .section-title {
+      margin: 28px 0 14px;
+      font-size: 1.4rem;
+      color: var(--primary-dark);
+      border-left: 5px solid var(--primary);
+      padding-left: 10px;
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .video-card {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 20px rgba(31, 41, 51, 0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .video-card h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: var(--primary-dark);
+    }
+
+    .duration {
+      display: inline-block;
+      width: fit-content;
+      padding: 4px 10px;
+      background: #e8f5ee;
+      color: var(--primary-dark);
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .video-wrapper {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #111827;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    video,
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: #000;
+    }
+
+    .status {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #f3f4f6;
+      color: var(--muted);
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .status.done {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 0.98rem;
+      cursor: pointer;
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn.secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .btn.secondary:hover {
+      background: #d1d5db;
+    }
+
+    .checkin-card {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 24px rgba(31, 41, 51, 0.08);
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .summary-item {
+      background: #f8faf8;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .summary-item .num {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    .summary-item .label {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .checkin-box {
+      background: #f0fdf4;
+      border: 2px dashed #86efac;
+      border-radius: 18px;
+      padding: 18px;
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .checkin-box h3 {
+      margin: 0 0 8px;
+      font-size: 1.35rem;
+      color: #166534;
+    }
+
+    .checkin-text {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #14532d;
+      margin: 12px 0;
+      word-break: break-word;
+    }
+
+    .time-text {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+      justify-content: center;
+    }
+
+    .log-list {
+      margin-top: 18px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .log-list li {
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      border-radius: 12px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      font-size: 0.95rem;
+    }
+
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .config-tip {
+      background: #eff6ff;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+      padding: 14px;
+      border-radius: 14px;
+      margin-top: 18px;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 860px) {
+      .video-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      .btn,
+      .notice,
+      .config-tip,
+      .footer {
+        display: none;
+      }
+
+      body {
+        background: white;
+      }
+
+      .container {
+        padding: 0;
+      }
+
+      header,
+      .video-card,
+      .checkin-card {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>教师八部金刚功运动打卡</h1>
+      <p>每天 5–15 分钟，跟练八部金刚功，舒展筋骨，放松身心。</p>
+      <p>视频播放结束后，页面会自动生成打卡信息，方便截图发微信群监督。</p>
+
+      <div class="notice">
+        温馨提示：请根据自身身体状况量力而行。如有心脑血管疾病、关节损伤、眩晕、严重腰颈椎问题等情况，请先咨询医生或专业人士。
+      </div>
+
+      <div class="config-tip">
+        使用说明：如果你要放到 GitHub Pages，请在代码中的
+        <strong>videoList</strong> 区域替换三个视频地址。推荐使用学校自制 MP4 文件或有授权的公开公开视频。
+      </div>
+    </header>
+
+    <h2 class="section-title">请选择今日跟练视频</h2>
+
+    <div id="videoGrid" class="video-grid"></div>
+
+    <h2 class="section-title">今日打卡信息</h2>
+
+    <section class="checkin-card">
+      <div class="summary">
+        <div class="summary-item">
+          <div id="todayMinutes" class="num">0</div>
+          <div class="label">今日已运动分钟</div>
+        </div>
+        <div class="summary-item">
+          <div id="completedCount" class="num">0</div>
+          <div class="label">今日完成视频数</div>
+        </div>
+        <div class="summary-item">
+          <div id="lastDuration" class="num">-</div>
+          <div class="label">最近一次完成</div>
+        </div>
+      </div>
+
+      <div class="checkin-box" id="checkinBox">
+        <h3 id="checkinTitle">尚未完成今日运动</h3>
+        <div class="checkin-text" id="checkinText">
+          请先选择一个视频完成跟练。
+        </div>
+        <div class="time-text" id="checkinTime"></div>
+
+        <div class="actions">
+          <button class="btn" onclick="copyCheckinText()">复制打卡文字</button>
+          <button class="btn secondary" onclick="resetToday()">清空今日记录</button>
+        </div>
+      </div>
+
+      <ul class="log-list" id="logList"></ul>
+    </section>
+
+    <div class="footer">
+      <p>建议打卡格式：姓名/昵称 + 八部金刚功 + 运动时长 + 今日感受。</p>
+      <p>本页面适合截图后发送至微信群，用于轻量化运动监督。</p>
+    </div>
+  </div>
+
+  <script>
+    /*
+      =========================
+      视频配置区：请替换这里
+      =========================
+
+      type 支持两种：
+      1. "mp4"：直接播放 MP4 视频链接
+      2. "iframe"：嵌入 B站、腾讯视频、学校平台等 iframe 链接
+
+      如果使用 GitHub Pages：
+      - 可以把 mp4 文件放到项目的 videos 文件夹中
+      - 然后使用类似：videos/jingang-5min.mp4
+
+      注意：
+      - 第三方视频网站的外链政策可能变化，iframe 可能无法正常嵌入。
+      - 若要确保稳定，建议使用自制 MP4 文件。
+    */
+
+    const videoList = [
+      {
+        id: "jingang-5",
+        title: "5分钟八部金刚功",
+        duration: 5,
+        type: "mp4",
+        url: "videos/jingang-5min.mp4"
+      },
+      {
+        id: "jingang-10",
+        title: "10分钟八部金刚功",
+        duration: 10,
+        type: "mp4",
+        url: "videos/jingang-10min.mp4"
+      },
+      {
+        id: "jingang-15",
+        title: "15分钟八部金刚功",
+        duration: 15,
+        type: "mp4",
+        url: "videos/jingang-15min.mp4"
+      }
+
+      /*
+      如果你使用 iframe，可以参考这种写法：
+
+      {
+        id: "jingang-5",
+        title: "5分钟八部金刚功",
+        duration: 5,
+        type: "iframe",
+        url: "https://player.bilibili.com/player.html?bvid=你的BV号&page=1"
+      }
+      */
+    ];
+
+    const storageKey = "teacher_jingang_checkin_records_v1";
+
+    function getTodayKey() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, "0");
+      const d = String(now.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function formatDateTime(date = new Date()) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      const h = String(date.getHours()).padStart(2, "0");
+      const min = String(date.getMinutes()).padStart(2, "0");
+      const s = String(date.getSeconds()).padStart(2, "0");
+      return `${y}-${m}-${d} ${h}:${min}:${s}`;
+    }
+
+    function loadRecords() {
+      try {
+        return JSON.parse(localStorage.getItem(storageKey)) || {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveRecords(records) {
+      localStorage.setItem(storageKey, JSON.stringify(records));
+    }
+
+    function getTodayRecords() {
+      const records = loadRecords();
+      const today = getTodayKey();
+      return records[today] || [];
+    }
+
+    function setTodayRecords(todayRecords) {
+      const records = loadRecords();
+      records[getTodayKey()] = todayRecords;
+      saveRecords(records);
+    }
+
+    function renderVideos() {
+      const grid = document.getElementById("videoGrid");
+      grid.innerHTML = "";
+
+      videoList.forEach((video) => {
+        const card = document.createElement("section");
+        card.className = "video-card";
+
+        const title = document.createElement("h2");
+        title.textContent = video.title;
+
+        const duration = document.createElement("span");
+        duration.className = "duration";
+        duration.textContent = `${video.duration} 分钟`;
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "video-wrapper";
+
+        if (video.type === "iframe") {
+          const iframe = document.createElement("iframe");
+          iframe.src = video.url;
+          iframe.allow =
+            "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+          iframe.allowFullscreen = true;
+          wrapper.appendChild(iframe);
+        } else {
+          const player = document.createElement("video");
+          player.src = video.url;
+          player.controls = true;
+          player.preload = "metadata";
+          player.setAttribute("playsinline", "");
+
+          player.addEventListener("ended", () => {
+            completeVideo(video);
+          });
+
+          wrapper.appendChild(player);
+        }
+
+        const status = document.createElement("div");
+        status.className = "status";
+        status.id = `status-${video.id}`;
+        status.textContent = "未完成";
+
+        const manualButton = document.createElement("button");
+        manualButton.className = "btn";
+        manualButton.textContent = "我已完成本视频";
+        manualButton.onclick = () => completeVideo(video);
+
+        const tip = document.createElement("p");
+        tip.style.margin = "0";
+        tip.style.color = "#6b7280";
+        tip.style.fontSize = "0.9rem";
+        tip.textContent =
+          video.type === "iframe"
+            ? "提示：第三方 iframe 视频无法自动识别播放结束，请完成后点击打卡按钮。"
+            : "提示：MP4 视频播放结束后会自动打卡，也可手动点击完成。";
+
+        card.appendChild(title);
+        card.appendChild(duration);
+        card.appendChild(wrapper);
+        card.appendChild(status);
+        card.appendChild(manualButton);
+        card.appendChild(tip);
+
+        grid.appendChild(card);
+      });
+
+      updateStatusLabels();
+    }
+
+    function completeVideo(video) {
+      const todayRecords = getTodayRecords();
+
+      const record = {
+        id: video.id,
+        title: video.title,
+        duration: video.duration,
+        time: formatDateTime()
+      };
+
+      todayRecords.push(record);
+      setTodayRecords(todayRecords);
+
+      updateCheckin();
+      updateStatusLabels();
+
+      const checkinBox = document.getElementById("checkinBox");
+      checkinBox.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    function updateStatusLabels() {
+      const todayRecords = getTodayRecords();
+
+      videoList.forEach((video) => {
+        const status = document.getElementById(`status-${video.id}`);
+        if (!status) return;
+
+        const matched = todayRecords.filter((item) => item.id === video.id);
+        if (matched.length > 0) {
+          status.className = "status done";
+          status.textContent = `已完成 ${matched.length} 次`;
+        } else {
+          status.className = "status";
+          status.textContent = "未完成";
+        }
+      });
+    }
+
+    function updateCheckin() {
+      const todayRecords = getTodayRecords();
+      const totalMinutes = todayRecords.reduce(
+        (sum, item) => sum + Number(item.duration),
+        0
+      );
+
+      const completedCount = todayRecords.length;
+      const last = todayRecords[todayRecords.length - 1];
+
+      document.getElementById("todayMinutes").textContent = totalMinutes;
+      document.getElementById("completedCount").textContent = completedCount;
+      document.getElementById("lastDuration").textContent = last
+        ? `${last.duration}`
+        : "-";
+
+      const title = document.getElementById("checkinTitle");
+      const text = document.getElementById("checkinText");
+      const time = document.getElementById("checkinTime");
+
+      if (completedCount === 0) {
+        title.textContent = "尚未完成今日运动";
+        text.textContent = "请先选择一个视频完成跟练。";
+        time.textContent = "";
+      } else {
+        title.textContent = "今日运动已完成";
+        text.textContent = `我已完成八部金刚功运动，共运动 ${totalMinutes} 分钟。`;
+        time.textContent = `打卡日期：${getTodayKey()}｜最近完成时间：${last.time}`;
+      }
+
+      renderLogList(todayRecords);
+    }
+
+    function renderLogList(todayRecords) {
+      const logList = document.getElementById("logList");
+      logList.innerHTML = "";
+
+      if (todayRecords.length === 0) {
+        return;
+      }
+
+      const title = document.createElement("li");
+      title.innerHTML = "<strong>今日完成记录</strong>";
+      logList.appendChild(title);
+
+      todayRecords
+        .slice()
+        .reverse()
+        .forEach((item, index) => {
+          const li = document.createElement("li");
+          li.textContent = `${index + 1}. ${item.title}｜${item.duration} 分钟｜${item.time}`;
+          logList.appendChild(li);
+        });
+    }
+
+    function copyCheckinText() {
+      const todayRecords = getTodayRecords();
+      const totalMinutes = todayRecords.reduce(
+        (sum, item) => sum + Number(item.duration),
+        0
+      );
+
+      let text = "";
+
+      if (todayRecords.length === 0) {
+        text = "我还没有完成今日八部金刚功运动。";
+      } else {
+        const last = todayRecords[todayRecords.length - 1];
+        text = `八部金刚功打卡｜${getTodayKey()}｜已完成 ${todayRecords.length} 个视频｜共运动 ${totalMinutes} 分钟｜最近完成：${last.title}`;
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(
+          () => showTemporaryMessage("打卡文字已复制，可粘贴到微信群。"),
+          () => fallbackCopy(text)
+        );
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.left = "-9999px";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+
+      try {
+        document.execCommand("copy");
+        showTemporaryMessage("打卡文字已复制，可粘贴到微信群。");
+      } catch (err) {
+        showTemporaryMessage("复制失败，请手动截图或复制页面文字。");
+      }
+
+      document.body.removeChild(textarea);
+    }
+
+    function showTemporaryMessage(message) {
+      const old = document.getElementById("toastMessage");
+      if (old) old.remove();
+
+      const toast = document.createElement("div");
+      toast.id = "toastMessage";
+      toast.textContent = message;
+      toast.style.position = "fixed";
+      toast.style.left = "50%";
+      toast.style.bottom = "24px";
+      toast.style.transform = "translateX(-50%)";
+      toast.style.background = "#111827";
+      toast.style.color = "#fff";
+      toast.style.padding = "12px 18px";
+      toast.style.borderRadius = "999px";
+      toast.style.boxShadow = "0 8px 20px rgba(0,0,0,0.18)";
+      toast.style.zIndex = "9999";
+      toast.style.fontSize = "0.95rem";
+
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.remove();
+      }, 2200);
+    }
+
+    function resetToday() {
+      const confirmReset = window.confirm(
+        "确定要清空今日运动记录吗？此操作只会清空本浏览器中的今日记录。"
+      );
+
+      if (!confirmReset) return;
+
+      setTodayRecords([]);
+      updateCheckin();
+      updateStatusLabels();
+      showTemporaryMessage("今日记录已清空。");
+    }
+
+    renderVideos();
+    updateCheckin();
+  </script>
+</body>
+</html>
